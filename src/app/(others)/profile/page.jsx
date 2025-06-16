@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/auth';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://connecthearpolling.vercel.app';
 
 const authService = {
   updateProfile: async (token, userData, profileImageFile = null, clearProfileImage = false) => {
