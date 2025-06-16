@@ -76,7 +76,7 @@ export default function LandingPage() {
         { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }
       );
     }
-  }, [currentView]);
+  }, [currentView]); // Trigger animation on currentView change
 
   // Redirect logic based on authentication status and loading state
   useEffect(() => {
