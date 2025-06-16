@@ -1,4 +1,3 @@
-// frontend/src/services/authService.js (Complete updated file)
 
 import axios from 'axios';
 
@@ -18,7 +17,7 @@ const authService = {
       console.log('Token:', token);
       return { token, user };
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Login failed due to an unexpected error.'; // Use error.response.data.message for consistency
+      const errorMessage = error.response?.data?.message || error.message || 'Login failed due to an unexpected error.'; 
       console.error('Login error:', errorMessage);
       throw new Error(errorMessage);
     }
@@ -31,12 +30,12 @@ const authService = {
       formData.append('email', email);
       formData.append('password', password);
       if (profileImageFile) {
-        formData.append('profileImage', profileImageFile); // Append the image file
+        formData.append('profileImage', profileImageFile); 
       }
 
       const response = await axios.post(`${API_URL}/register`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Important for file uploads
+          'Content-Type': 'multipart/form-data', 
         },
       });
       
@@ -60,7 +59,7 @@ const authService = {
           'x-auth-token': token,
         },
       });
-      return response.data.data; // Backend sends { success: true, data: user } for getUser route
+      return response.data.data; 
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Failed to fetch user data. Please log in again.';
       console.error('getCurrentUser error:', errorMessage);
@@ -83,7 +82,7 @@ const authService = {
       if (userData.username !== undefined) formData.append('username', userData.username);
       if (userData.email !== undefined) formData.append('email', userData.email);
       if (profileImageFile) formData.append('profileImage', profileImageFile);
-      if (clearProfileImage) formData.append('clearProfileImage', 'true'); // Send a flag to backend
+      if (clearProfileImage) formData.append('clearProfileImage', 'true'); 
 
       const response = await axios.put(`${API_URL}/profile`, formData, {
         headers: {
@@ -91,8 +90,8 @@ const authService = {
           'Content-Type': 'multipart/form-data',
         },
       });
-      // Backend returns { success, message, data: user } for updateUser route
-      return response.data.data; // Return the updated user object
+
+      return response.data.data;
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Failed to update profile.';
       console.error('Update profile error:', errorMessage);
@@ -104,7 +103,7 @@ const authService = {
   forgotPassword: async (email) => {
     try {
       const response = await axios.post(`${API_URL}/forgotpassword`, { email });
-      return response.data; // Expected: { success: true, message: 'OTP sent...' }
+      return response.data;
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Failed to send password reset email.';
       console.error('Forgot password error:', errorMessage);
@@ -116,7 +115,7 @@ const authService = {
   verifyOtp: async (email, otp) => {
     try {
       const response = await axios.post(`${API_URL}/verify-otp`, { email, otp });
-      // Expected: { success: true, message: 'OTP verified...', passwordChangeToken: '...' }
+   
       return response.data; 
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'OTP verification failed.';
@@ -125,11 +124,11 @@ const authService = {
     }
   },
 
-  // New: Reset Password
+ 
   resetPassword: async (password, passwordChangeToken) => {
     try {
       const response = await axios.put(`${API_URL}/resetpassword`, { password, passwordChangeToken });
-      // Expected: { success: true, message: 'Password has been reset...', token: '...', user: {...} }
+    
       return response.data; 
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Password reset failed.';
@@ -138,18 +137,16 @@ const authService = {
     }
   },
 
-  // New: Logout (calls backend endpoint, clears cookie)
-  logout: async (token) => { // Accept token for protected route if backend requires
+ 
+  logout: async (token) => { 
     try {
-      // You might or might not need to send the token depending on how your backend's logout route is protected.
-      // If your backend's logout clears an HTTP-only cookie, you might not even need the token in the request.
-      // If it's a protected route that checks the 'x-auth-token' header, include it.
+     
       await axios.post(`${API_URL}/logout`, {}, {
         headers: {
-          'x-auth-token': token, // Include token if your logout route is protected by authMiddleware
+          'x-auth-token': token, 
         },
       });
-      // The backend will clear the cookie. Frontend will clear local storage via Zustand.
+   
       return { success: true, message: 'Logged out successfully.' };
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Logout failed.';
