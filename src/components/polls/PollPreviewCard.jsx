@@ -3,30 +3,29 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress'; // Assuming Progress component is available
+import { Progress } from '@/components/ui/progress'; 
 import { motion } from 'framer-motion';
 
-// This component displays a live preview of the poll as it's being created.
-// It takes `question`, `options`, and `imagePreviews` as props from the CreatePollPage.
+
 export default function PollPreviewCard({ question, options, imagePreviews }) {
   // Filter out empty options for a cleaner preview
   const validOptions = options.filter(opt => opt.trim() !== '');
 
-  // Placeholder for total votes in preview mode
-  const totalPreviewVotes = validOptions.length > 0 ? validOptions.length * 5 : 0; // Just an arbitrary number for visual effect
+  
+  const totalPreviewVotes = validOptions.length > 0 ? validOptions.length * 5 : 0; 
 
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
-      className="w-full h-full flex flex-col" // Ensures card takes full height for consistent layout
+      className="w-full h-full flex flex-col" 
     >
       <Card className="flex-1 p-5 shadow-xl rounded-2xl bg-white/90 backdrop-blur-sm border border-blue-100">
         <CardHeader className="pb-4">
           {imagePreviews && imagePreviews.length > 0 ? (
             <img
-              src={imagePreviews[0]} // Show only the first image for simplicity in preview
+              src={imagePreviews[0]} 
               alt="Poll Preview Image"
               className="w-full h-48 object-cover rounded-lg mb-4 border border-gray-100 shadow-sm"
             />
@@ -47,7 +46,7 @@ export default function PollPreviewCard({ question, options, imagePreviews }) {
         <CardContent className="space-y-3">
           {validOptions.length > 0 ? (
             validOptions.map((option, index) => {
-              // Simulate some percentage for preview
+      
               const simulatedPercentage = validOptions.length > 0 ? ((1 / validOptions.length) * 100).toFixed(1) : 0;
               const simulatedVotes = Math.round(totalPreviewVotes / validOptions.length);
 

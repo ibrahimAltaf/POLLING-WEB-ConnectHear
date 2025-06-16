@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 export default function PollCard({ poll }) {
-  if (!poll) return null; // Handle case where poll data might be missing
+  if (!poll) return null; 
 
   return (
     <Link href={`/polls/${poll._id}`} passHref>
@@ -16,11 +16,11 @@ export default function PollCard({ poll }) {
         whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }} // Stagger delay if used in a grid
+        transition={{ duration: 0.5, delay: 0.1 }}
       >
         <Card className="flex-1 flex flex-col justify-between border-none shadow-none">
           <CardHeader className="p-4 pb-2">
-            {/* Display poll image if available */}
+           
             {poll.image && poll.image.url && (
               <img
                 src={poll.image.url}
@@ -38,10 +38,10 @@ export default function PollCard({ poll }) {
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <p className="text-md font-semibold text-gray-700 mb-2">Total Votes: {poll.totalVotes}</p>
-            {/* Display options with vote counts */}
+          
             {poll.options && poll.options.length > 0 ? (
               <ul className="text-sm text-gray-500 space-y-1">
-                {poll.options.slice(0, 3).map((option) => ( // Show top 3 options
+                {poll.options.slice(0, 3).map((option) => ( 
                   <li key={option._id} className="flex justify-between items-center">
                     <span>{option.text}</span>
                     <span className="font-medium text-gray-700">{option.votes} votes</span>

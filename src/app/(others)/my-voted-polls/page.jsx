@@ -1,4 +1,4 @@
-// src/app/my-voted-polls/page.jsx
+
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
@@ -6,8 +6,7 @@ import useAuthStore from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import { Button } from '@/components/ui/button';
-// No need for Input, Label, Dialog, etc. as EditPollModal is not used here
-import { X, Plus, ImageIcon, Loader2 } from 'lucide-react'; // Retained for embedded PollCard if needed elsewhere, though not strictly for this page's logic now
+import { X, Plus, ImageIcon, Loader2 } from 'lucide-react'; 
 import Link from 'next/link';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
@@ -18,16 +17,12 @@ import { motion } from 'framer-motion';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/polls';
 
 
-// =======================================================
-// EMBEDDED POLL CARD COMPONENT (Adapted for Voted Polls)
-// =======================================================
-function PollCard({ poll }) { // Removed isEditable, onDeleteSuccess, onEditClick as they are not relevant here
+function PollCard({ poll }) {
   if (!poll) return null;
 
   const primaryImage = poll.images && poll.images.length > 0 ? poll.images[0] : null;
 
-  // No delete/edit functions needed for voted polls
-  // No _getCardToken, handleDelete, handleEdit functions here
+
 
   return (
     <motion.div
@@ -74,7 +69,6 @@ function PollCard({ poll }) { // Removed isEditable, onDeleteSuccess, onEditClic
             <p className="text-sm text-gray-500">No options available.</p>
           )}
         </CardContent>
-        {/* No Edit/Delete buttons for voted polls */}
       </Card>
     </motion.div>
   );
@@ -84,8 +78,8 @@ function PollCard({ poll }) { // Removed isEditable, onDeleteSuccess, onEditClic
 export default function MyVotedPollsPage() {
   const { isAuthenticated, loading: authLoading, initializeAuth, user } = useAuthStore();
   const router = useRouter();
-  const [votedPolls, setVotedPolls] = useState([]); // Changed state variable name
-  const [loadingVotedPolls, setLoadingVotedPolls] = useState(true); // Changed state variable name
+  const [votedPolls, setVotedPolls] = useState([]); 
+  const [loadingVotedPolls, setLoadingVotedPolls] = useState(true); 
 
   const _getToken = useCallback(() => {
     const { token } = useAuthStore.getState();
@@ -104,50 +98,50 @@ export default function MyVotedPollsPage() {
     console.log('[useEffect - Redirect] authLoading:', authLoading, 'isAuthenticated:', isAuthenticated);
     if (!authLoading && !isAuthenticated) {
       router.replace('/home');
-      toast.info("Please log in to view your voted polls."); // Updated message
+      toast.info("Please log in to view your voted polls."); 
     }
   }, [isAuthenticated, authLoading, router]);
 
-  const fetchVotedPolls = useCallback(async () => { // Changed function name
-    console.log('[fetchVotedPolls] Called. isAuthenticated:', isAuthenticated, 'user ID:', user?.id); // Updated log
+  const fetchVotedPolls = useCallback(async () => { 
+    console.log('[fetchVotedPolls] Called. isAuthenticated:', isAuthenticated, 'user ID:', user?.id); 
 
     if (isAuthenticated && user?.id) {
-      setLoadingVotedPolls(true); // Updated loading state
+      setLoadingVotedPolls(true); 
       try {
         const token = _getToken();
         if (!token) {
-          throw new Error('Authentication required. Please log in to view your voted polls.'); // Updated message
+          throw new Error('Authentication required. Please log in to view your voted polls.'); 
         }
 
-        console.log('[fetchVotedPolls] Making API call to:', `${API_URL}/voted-polls`); // Updated API endpoint
-        const response = await axios.get(`${API_URL}/voted-polls`, { // Updated API endpoint
+        console.log('[fetchVotedPolls] Making API call to:', `${API_URL}/voted-polls`); 
+        const response = await axios.get(`${API_URL}/voted-polls`, { 
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
         const fetchedPolls = response.data.data;
-        setVotedPolls(fetchedPolls); // Updated state variable name
-        console.log('[fetchVotedPolls] Fetched voted polls successfully:', fetchedPolls.length, 'polls.'); // Updated log
-        console.log('[fetchVotedPolls] votedPolls state after setVotedPolls:', fetchedPolls); // Updated log
+        setVotedPolls(fetchedPolls);
+        console.log('[fetchVotedPolls] Fetched voted polls successfully:', fetchedPolls.length, 'polls.'); 
+        console.log('[fetchVotedPolls] votedPolls state after setVotedPolls:', fetchedPolls); 
         
         if (fetchedPolls.length === 0) {
-          toast.info("You haven't voted on any polls yet!"); // Updated message
+          toast.info("You haven't voted on any polls yet!");
         }
       } catch (error) {
-        console.error('[fetchVotedPolls] Error fetching user\'s voted polls:', error.response?.data || error.message); // Updated log
-        toast.error(error.response?.data?.message || "Failed to retrieve your voted polls. Please try again.", { // Updated message
+        console.error('[fetchVotedPolls] Error fetching user\'s voted polls:', error.response?.data || error.message); 
+        toast.error(error.response?.data?.message || "Failed to retrieve your voted polls. Please try again.", { 
           position: "top-right", autoClose: 3000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,
         });
       } finally {
-        setLoadingVotedPolls(false); // Updated loading state
-        console.log('[fetchVotedPolls] LoadingVotedPolls set to false in finally block.'); // Updated log
+        setLoadingVotedPolls(false); 
+        console.log('[fetchVotedPolls] LoadingVotedPolls set to false in finally block.'); 
       }
     } else if (!authLoading && !isAuthenticated) {
-      setLoadingVotedPolls(false); // Updated loading state
-      setVotedPolls([]); // Updated state variable name
-      console.log('[fetchVotedPolls] Not authenticated, stopping voted poll fetch.'); // Updated log
+      setLoadingVotedPolls(false);
+      setVotedPolls([]);
+      console.log('[fetchVotedPolls] Not authenticated, stopping voted poll fetch.');
     } else if (isAuthenticated && !user?.id) {
-        setLoadingVotedPolls(false); // Updated loading state
+        setLoadingVotedPolls(false);
         toast.error('User ID not found in authentication state. Please try logging in again.');
     }
   }, [isAuthenticated, authLoading, user?.id, _getToken]);
@@ -155,16 +149,15 @@ export default function MyVotedPollsPage() {
   useEffect(() => {
     console.log('[useEffect - Fetch Polls] authLoading:', authLoading, 'isAuthenticated:', isAuthenticated, 'Current user:', user);
     if (!authLoading) {
-      fetchVotedPolls(); // Call the updated fetch function
+      fetchVotedPolls(); 
     }
   }, [authLoading, fetchVotedPolls, isAuthenticated, user]);
 
 
-  // No handlePollDeleteSuccess or handleEditClick/handlePollUpdated needed here
-  // as editing/deleting is not done for voted polls.
+  
 
   console.log('[Render] authLoading:', authLoading, 'loadingVotedPolls:', loadingVotedPolls, 'isAuthenticated:', isAuthenticated); // Updated log
-  if (authLoading || loadingVotedPolls) { // Updated loading state
+  if (authLoading || loadingVotedPolls) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <svg className="animate-spin h-10 w-10 text-blue-500" viewBox="0 0 24 24">
@@ -184,16 +177,15 @@ export default function MyVotedPollsPage() {
       <Sidebar />
       <div className="flex-1 flex flex-col p-8 lg:ml-64">
         <h1 className="text-5xl font-extrabold text-gray-900 mb-8 pb-4 border-b-4 border-blue-300">
-          Your Voted Polls 🗳️ {/* Updated page title */}
+          Your Voted Polls 🗳️ 
         </h1>
 
-        {votedPolls.length === 0 ? ( // Updated state variable name
+        {votedPolls.length === 0 ? (
           <div className="bg-white p-10 rounded-xl shadow-2xl text-center border border-dashed border-blue-300">
             <p className="text-2xl text-gray-700 mb-8 font-semibold">
               You haven't voted on any polls yet! Time to make your voice heard.
             </p>
-            {/* You might consider a link to a general "all polls" page here */}
-            {/* For now, linking back to home or a placeholder */}
+           
             <Link href="/home" passHref>
               <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xl py-4 px-8 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300">
                 Explore Polls
@@ -202,19 +194,17 @@ export default function MyVotedPollsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 place-items-center">
-            {votedPolls.map((poll) => ( // Updated state variable name
+            {votedPolls.map((poll) => ( 
               <PollCard
                 key={poll._id}
                 poll={poll}
-                // isEditable={false} // No edit/delete buttons for voted polls, so this prop is not needed
-                // onDeleteSuccess is not passed
-                // onEditClick is not passed
+               
               />
             ))}
           </div>
         )}
       </div>
-      {/* EditPollModal is not rendered on this page */}
+    
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </div>
   );

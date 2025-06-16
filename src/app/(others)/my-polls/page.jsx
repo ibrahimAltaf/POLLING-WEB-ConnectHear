@@ -1,4 +1,4 @@
-// src/app/my-polls/page.jsx
+
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';

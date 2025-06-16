@@ -68,7 +68,7 @@ export default function CreatePollPage() {
     const totalImagesLimit = 5;
     const currentTotalImages = imageFiles.length;
 
-    // Filter out invalid files and collect valid ones
+   
     const validNewFiles = [];
     files.forEach(file => {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -87,7 +87,7 @@ export default function CreatePollPage() {
 
     if (currentTotalImages + validNewFiles.length > totalImagesLimit) {
       toast.warn(`You can upload a maximum of ${totalImagesLimit} images. Please remove some existing images or select fewer new ones.`, { position: "top-right" });
-      e.target.value = ''; // Clear input to allow re-selection
+      e.target.value = ''; 
       return;
     }
 
@@ -96,22 +96,21 @@ export default function CreatePollPage() {
     let processedCount = 0;
 
     if (validNewFiles.length === 0) {
-      e.target.value = ''; // Clear input if no valid files were selected
+      e.target.value = ''; 
       return;
     }
 
     validNewFiles.forEach(file => {
-      newImageFiles.push(file); // Add to the files array
+      newImageFiles.push(file);
 
       const reader = new FileReader();
       reader.onloadend = () => {
         newImagePreviews.push(reader.result);
         processedCount++;
-        // When all valid new files have been processed, update the state
         if (processedCount === validNewFiles.length) {
           setImageFiles(prev => [...prev, ...newImageFiles]);
           setImagePreviews(prev => [...prev, ...newImagePreviews]);
-          e.target.value = ''; // Clear the input field after successful processing
+          e.target.value = ''; 
         }
       };
       reader.readAsDataURL(file);
@@ -138,8 +137,7 @@ export default function CreatePollPage() {
       setIsLoading(false);
       return;
     }
-    // Frontend validation: requiring at least one image.
-    // If images are optional, remove this block.
+    
     if (imageFiles.length === 0) {
       toast.error('Please upload at least one image for the poll.', { position: "top-right" });
       setIsLoading(false);
@@ -147,23 +145,22 @@ export default function CreatePollPage() {
     }
 
     try {
-      // Pass the entire imageFiles array to the service
+     
       await pollService.createPoll(question, filteredOptions, imageFiles);
       toast.success('Poll created successfully!', { position: "top-right" });
 
-      // Reset form fields after successful creation
+      
       setQuestion('');
       setOptions(['', '']);
       setImageFiles([]);
       setImagePreviews([]);
 
-      // Redirect user to another page after successful poll creation
-      router.push('/home'); // Or '/dashboard', or '/polls'
+      router.push('/home'); 
     } catch (error) {
       console.error('Error creating poll in frontend:', error);
       toast.error(error.response?.data?.message || error.message || 'Failed to create poll. Please try again.', { position: "top-right" });
     } finally {
-      setIsLoading(false); // Ensure isLoading is set to false whether the API call succeeded or failed
+      setIsLoading(false); 
     }
   };
 
@@ -181,7 +178,7 @@ export default function CreatePollPage() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 p-4 ml-10"> {/* Adjusted left margin/padding for main content */}
+      <div className="flex-1 p-4 ml-10">
         <motion.div
           className="w-full max-w-4xl mx-auto"
           initial={{ opacity: 0, y: 20 }}

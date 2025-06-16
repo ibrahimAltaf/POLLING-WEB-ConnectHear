@@ -7,7 +7,7 @@ import Sidebar from '@/components/Sidebar/Sidebar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -32,14 +32,10 @@ const PollCard = ({ poll, user, onPollUpdated }) => {
   const [isVoting, setIsVoting] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Determine if the logged-in user (if any) has voted
   const hasLoggedInUserVoted = user && poll.votedBy?.includes(user._id);
 
-  // Determine if results should be shown (if user voted or any votes exist)
-  // Results are shown if logged-in user voted, OR if there's any total vote count greater than 0
   const showResults = hasLoggedInUserVoted || (poll.totalVotes && poll.totalVotes > 0);
   
-  // Determine if the user can cast a vote (only if they haven't already voted)
   const canCastVote = !hasLoggedInUserVoted;
 
   if (!poll) return null;
@@ -51,12 +47,10 @@ const PollCard = ({ poll, user, onPollUpdated }) => {
     }
     setIsVoting(true);
     try {
-      // Pass the selected option ID to the service
       const response = await pollService.vote(poll._id, selectedOption);
       toast.success("Vote cast successfully!");
-      // Update the parent component's state with the fresh poll data from the backend
       onPollUpdated(response.data.data);
-      setSelectedOption(null); // Reset selected option after vote
+      setSelectedOption(null);
     } catch (error) {
       console.error("Error during vote in PollCard:", error);
       toast.error(error.response?.data?.message || error.message || "Failed to cast vote.", { autoClose: 5000 });
@@ -141,7 +135,6 @@ const PollCard = ({ poll, user, onPollUpdated }) => {
               {poll.options.map((option) => {
                 const votes = Number(option.votes) || 0;
                 const totalVotes = Number(poll.totalVotes) || 0;
-                // Calculate percentage, handling division by zero
                 const percentage = totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(1) : 0;
 
                 return (
@@ -156,14 +149,12 @@ const PollCard = ({ poll, user, onPollUpdated }) => {
                       >
                         {option.text}
                       </label>
-                      {/* Show votes and percentage if results are to be displayed */}
                       {showResults && (
                         <span className="ml-auto text-gray-600 text-sm font-semibold">
                           {votes} votes ({percentage}%)
                         </span>
                       )}
                     </div>
-                    {/* Show progress bar if results are to be displayed */}
                     {showResults && <ProgressBar percentage={percentage} />}
                   </div>
                 );
@@ -175,27 +166,22 @@ const PollCard = ({ poll, user, onPollUpdated }) => {
 
           <div className="mt-6 text-sm text-gray-600">
             <h4 className="font-semibold text-gray-800 mb-2">Recent Participants:</h4>
-            {/* Conditional display for participants */}
             {poll.votedByDetails && poll.votedByDetails.length > 0 || hasLoggedInUserVoted ? (
               <div className="flex flex-wrap gap-2">
-                {/* Always show the logged-in user if they've voted, as the first participant */}
                 {hasLoggedInUserVoted && user && (
                   <span className="bg-blue-200 text-blue-900 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 border border-blue-400">
                     <UserRound size={14} className="inline-block" /> You
                   </span>
                 )}
 
-                {/* Show other participants, filtering out the current user to avoid duplication */}
-                {/* Adjust slice limit based on whether 'You' badge is displayed to maintain overall limit */}
                 {poll.votedByDetails
-                  .filter(voter => !(hasLoggedInUserVoted && user && voter._id === user._id)) // Filter out current user if 'You' is shown
-                  .slice(0, 5 - (hasLoggedInUserVoted && user ? 1 : 0)) // Show up to 5 names total (including 'You')
+                  .filter(voter => !(hasLoggedInUserVoted && user && voter._id === user._id))
+                  .slice(0, 5 - (hasLoggedInUserVoted && user ? 1 : 0))
                   .map((voter) => (
                     <span key={voter._id} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                       <UserRound size={14} className="inline-block" /> {voter.username || 'Anonymous'}
                     </span>
                   ))}
-                {/* Show "+X more" if there are more participants than currently displayed */}
                 {poll.votedByDetails.length > 5 - (hasLoggedInUserVoted && user ? 1 : 0) && (
                   <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-medium">
                     +{poll.votedByDetails.length - (5 - (hasLoggedInUserVoted && user ? 1 : 0))} more
@@ -205,13 +191,11 @@ const PollCard = ({ poll, user, onPollUpdated }) => {
             ) : (
               <p className="text-sm text-gray-500">No logged-in users have participated yet.</p>
             )}
-            {/* Show anonymous votes if any */}
             {poll.anonymousVotes > 0 && (
               <p className="mt-2 font-semibold text-gray-700 text-sm flex items-center gap-1">
                 <ShieldQuestion size={14} className="inline-block" /> Plus {poll.anonymousVotes} anonymous vote{poll.anonymousVotes > 1 ? 's' : ''}.
               </p>
             )}
-            {/* Message if no votes at all */}
             {poll.totalVotes === 0 && <p className="text-sm text-gray-500 mt-2">Be the first to cast a vote!</p>}
           </div>
         </CardContent>
@@ -224,7 +208,7 @@ const PollCard = ({ poll, user, onPollUpdated }) => {
             <Button
               className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2.5 font-semibold transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
               onClick={handleVote}
-              disabled={isVoting || !selectedOption} // Disable if voting or no option selected
+              disabled={isVoting || !selectedOption}
             >
               {isVoting ? 'Submitting Vote...' : 'Vote Now'}
             </Button>
@@ -241,19 +225,16 @@ export default function HomePage() {
   const [polls, setPolls] = useState([]);
   const [loadingPolls, setLoadingPolls] = useState(true);
 
-  // Initialize auth state on component mount
   useEffect(() => {
     if (authLoading) {
       initializeAuth();
     }
   }, [authLoading, initializeAuth]);
 
-  // Function to fetch all polls from the backend
   const fetchPolls = useCallback(async () => {
     setLoadingPolls(true);
     try {
       const fetchedPolls = await pollService.getAllPolls();
-      // Assume pollService.getAllPolls() returns response.data.data directly (an array of polls)
       setPolls(fetchedPolls);
     } catch (error) {
       console.error("Error fetching all polls:", error);
@@ -271,11 +252,9 @@ export default function HomePage() {
     }
   }, []);
 
-  // Handler to update a single poll in the state after a vote or other change
   const handlePollUpdated = useCallback((updatedPoll) => {
     if (!updatedPoll || !updatedPoll._id) {
       console.error("handlePollUpdated: Invalid updatedPoll object (missing _id).", updatedPoll);
-      // Fallback: If the updated poll is invalid, refetch all polls to ensure data consistency
       fetchPolls();
       return;
     }
@@ -283,7 +262,7 @@ export default function HomePage() {
     setPolls((prevPolls) => {
       const newPolls = prevPolls.map((p) => {
         if (p && p._id && p._id === updatedPoll._id) {
-          return updatedPoll; // Replace the old poll with the updated one
+          return updatedPoll;
         }
         return p;
       });
@@ -291,14 +270,12 @@ export default function HomePage() {
     });
   }, [fetchPolls]); 
 
-  // Fetch polls once authentication state is determined (not loading)
   useEffect(() => {
     if (!authLoading) {
       fetchPolls();
     }
   }, [authLoading, fetchPolls]); 
 
-  // Loading state UI
   if (authLoading || loadingPolls) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
@@ -347,8 +324,8 @@ export default function HomePage() {
                 <PollCard
                   key={poll._id}
                   poll={poll}
-                  user={user} // Pass the current user to PollCard
-                  onPollUpdated={handlePollUpdated} // Pass the handler to update poll state
+                  user={user}
+                  onPollUpdated={handlePollUpdated}
                 />
               ))}
             </div>

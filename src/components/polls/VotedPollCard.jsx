@@ -1,4 +1,4 @@
-// src/components/polls/VotedPollCard.jsx
+
 'use client';
 
 import React from 'react';
@@ -6,20 +6,18 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { CheckCircle } from 'lucide-react'; // For the checkmark icon
+import { CheckCircle } from 'lucide-react';
 
 const PLACEHOLDER_IMAGE = "https://placehold.co/400x200/E0E7FF/5C6BC0?text=No+Image";
 
 export default function VotedPollCard({ poll }) {
-  if (!poll) return null; // Handle case where poll data might be missing
+  if (!poll) return null; 
 
-  // Find the option the user voted for.
-  // Assuming `poll.userVote` will be populated by the backend for voted polls
-  // with the _id of the option the user selected.
-  const userVotedOptionId = poll.userVote; // This needs to come from your backend payload
+
+  const userVotedOptionId = poll.userVote; 
   const userVotedOption = poll.options?.find(opt => opt._id === userVotedOptionId);
 
-  // If the poll has multiple images, pick the first one for the card display
+
   const imageUrl = poll.images && poll.images.length > 0 && poll.images[0]?.url
     ? poll.images[0].url
     : PLACEHOLDER_IMAGE;

@@ -1,4 +1,4 @@
-// src/app/profile/page.jsx
+
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
@@ -15,7 +15,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-// API Services
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/auth';
 
 const authService = {
@@ -71,7 +71,7 @@ const authService = {
   },
 };
 
-// Enhanced Change Password Modal
+
 function ChangePasswordModal({ isOpen, onClose }) {
   const [step, setStep] = useState('request_otp');
   const [email, setEmail] = useState('');
@@ -387,7 +387,7 @@ export default function ProfilePage() {
       <Sidebar />
       <div className="flex-1 flex flex-col p-4 md:p-8 ">
         <div className="max-w-9xl mx-auto w-full space-y-6">
-          {/* Profile Header */}
+    
           <div className="flex items-center justify-between">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Profile Settings</h1>
             <div className="flex gap-2">
@@ -411,7 +411,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Main Profile Card */}
+      
           <Card className="overflow-hidden">
             <CardHeader className="border-b bg-gray-50 p-6">
               <CardTitle className="text-xl">Personal Information</CardTitle>
@@ -421,7 +421,7 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent className="p-6">
               <form onSubmit={handleProfileSubmit} className="space-y-6">
-                {/* Profile Image Section */}
+          
                 <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
                   <div className="relative group">
                     <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-gray-200">
@@ -489,7 +489,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Form Fields */}
+
                 <div className="grid gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="username">Username</Label>
@@ -514,7 +514,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Save Button */}
+
                 <div className="flex justify-end pt-4">
                   <Button
                     type="submit"
@@ -531,7 +531,7 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Security Card */}
+       
           <Card>
             <CardHeader className="border-b bg-gray-50 p-6">
               <CardTitle className="text-xl">Security</CardTitle>
@@ -559,7 +559,7 @@ export default function ProfilePage() {
           </Card>
         </div>
 
-        {/* Change Password Modal */}
+     
         <ChangePasswordModal
           isOpen={isChangePasswordModalOpen}
           onClose={handleCloseChangePasswordModal}

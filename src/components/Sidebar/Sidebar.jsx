@@ -1,4 +1,4 @@
-// src/components/layouts/Sidebar/Sidebar.jsx
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -77,7 +77,7 @@ export default function Sidebar() {
     return null;
   }
 
-  // Mobile toggle button (always visible on mobile)
+  
   const MobileToggleButton = () => (
     <div className="lg:hidden fixed bottom-4 right-4 z-50">
       <Button
@@ -89,10 +89,8 @@ export default function Sidebar() {
     </div>
   );
 
-  // Sidebar content (shared between mobile and desktop)
   const SidebarContent = () => (
     <>
-      {/* User Profile Section */}
       <div className="flex items-center space-x-2 p-2 mb-4 bg-blue-50 rounded-lg shadow-sm">
         <UserIcon className="h-7 w-7 text-blue-600 flex-shrink-0" />
         <div className="flex flex-col overflow-hidden">
@@ -103,7 +101,6 @@ export default function Sidebar() {
 
       <Separator className="my-3" />
 
-      {/* Navigation Links */}
       <nav className="flex-1 space-y-1.5">
         {navItems.map((item) => (
           <Link key={item.name} href={item.href} passHref>
@@ -125,7 +122,6 @@ export default function Sidebar() {
 
       <Separator className="my-3" />
 
-      {/* Logout Button */}
       <div className="mt-auto p-2">
         <Button
           variant="destructive"
@@ -141,12 +137,11 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Desktop Sidebar (hidden on mobile) */}
       <aside className="hidden lg:flex flex-col h-screen w-64 bg-gray-50 border-r border-gray-200 shadow-lg p-3 sticky top-0 overflow-y-auto z-20">
         <SidebarContent />
       </aside>
 
-      {/* Mobile Sidebar (overlay) */}
+
       {isMobile && (
         <>
           <MobileToggleButton />
