@@ -17,7 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/polls';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://connecthearpolling.vercel.app/api/polls';
 
 
 function EditPollModal({ poll, isOpen, onClose, onSave }) {

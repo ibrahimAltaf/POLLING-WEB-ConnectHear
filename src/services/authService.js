@@ -99,7 +99,7 @@ const authService = {
     }
   },
 
-  // New: Request password reset (sends OTP)
+
   forgotPassword: async (email) => {
     try {
       const response = await axios.post(`${API_URL}/forgotpassword`, { email });
